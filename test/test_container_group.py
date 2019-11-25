@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 import time
 from pytest import fixture
-from aci_tasks.cloud import (
-    ResourceGroup,
-    ContainerGroupInstance,
-    ContainerInstance
-)
+from aci_tasks.cloud.aci_container import AciContainer
+from aci_tasks.cloud.aci_container_group import AciContainerGroup
+from aci_tasks.cloud.aci_resource_group import AciResourceGroup
 from aci_tasks.logger import Logger
 from aci_tasks.config import Config, TaskType
 
 
 @fixture(scope="session", autouse=True)
 def setup():
-    rg = ResourceGroup(Logger(), Config(TaskType.STRONG))
+    rg = AciResourceGroup(Logger(), Config(TaskType.STRONG))
     rg.create()
     yield
     rg.delete()
@@ -20,17 +18,17 @@ def setup():
 
 @fixture
 def strong_container_instance():
-    return ContainerInstance(Logger(), Config(TaskType.STRONG))
+    return AciContainer(Logger(), Config(TaskType.STRONG))
 
 
 @fixture
 def strong_container_group():
-    return ContainerGroupInstance(Logger(), Config(TaskType.STRONG))
+    return AciContainerGroup(Logger(), Config(TaskType.STRONG))
 
 
 @fixture
 def weak_container_group():
-    return ContainerGroupInstance(Logger(), Config(TaskType.WEAK))
+    return AciContainerGroup(Logger(), Config(TaskType.WEAK))
 
 
 def test_strong_create(strong_container_group):
