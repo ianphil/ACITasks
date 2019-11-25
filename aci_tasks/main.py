@@ -5,6 +5,11 @@ from logger import Logger
 from cloud import ContainerGroupInstance, ResourceGroup, ContainerInstance
 
 if __name__ == "__main__":
+    '''
+    Note: The tests do these things also. From root of project
+    just run "pytest"
+    '''
+
     # Create Strong task container and exec command
     strong_config = Config(TaskType.STRONG)
     logger = Logger()
