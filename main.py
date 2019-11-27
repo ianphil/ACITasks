@@ -5,6 +5,7 @@ from logger import Logger
 from cloud.aci_container import AciContainer
 from cloud.aci_container_group import AciContainerGroup
 from cloud.aci_resource_group import AciResourceGroup
+from cloud.aci_key_vault import KeyVaultStore
 
 if __name__ == "__main__":
     '''
@@ -40,3 +41,13 @@ if __name__ == "__main__":
 
     # Clean up
     rg.delete()
+
+    # Key Vault Store examples
+    # TODO: Need to write code to create Key Vault
+    config_store = KeyVaultStore()
+
+    config_store["NAME"] = "Ian Philpot"
+    config_store["JOB"] = "engineer"
+
+    for k, v in config_store.items():
+        print(f'Name: {k} \t\tValue: {v}')

@@ -1,6 +1,8 @@
 adal==1.2.2
 attrs==19.3.0
 azure-common==1.1.23
+azure-core==1.0.0
+azure-keyvault-secrets==4.0.0
 azure-mgmt-containerinstance==1.5.0
 azure-mgmt-resource==6.0.0
 certifi==2019.9.11
