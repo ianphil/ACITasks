@@ -10,8 +10,8 @@ class TaskType(Enum):
 
 class Config():
     def __init__(self, task_type: TaskType):
-        if os.getenv('RESOURCEGROUPNAME') is None:
-            _set_env_vars()
+        # if os.getenv('RESOURCEGROUPNAME') is None:
+        _set_env_vars()
 
         self.resource_group_name = \
             os.getenv('RESOURCEGROUPNAME')
@@ -48,6 +48,12 @@ class Config():
         self.endpoint_url = \
             os.getenv("ENDPOINTURL")
 
+        self.key_vault_name = \
+            os.getenv("KEYVAULTNAME")
+
+        self.client_object_id = \
+            os.getenv("CLIENTOBJECTID")
+
 
 def _set_env_vars():
     current_path = os.path.dirname(os.path.realpath(__file__))
@@ -58,6 +64,7 @@ def _set_env_vars():
 
 
 def _parse_set_env_var(line):
+    # TODO: Need to filter for inline comments
     data = line.strip('\n').split('=', 1)
 
     try:
