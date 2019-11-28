@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 import time
-from config import Config, TaskType
-from logger import Logger
+from aci_tasks.config import Config, TaskType
+from aci_tasks.logger import Logger
 from cloud.aci_container import AciContainer
 from cloud.aci_container_group import AciContainerGroup
-from cloud.aci_resource_group import AciResourceGroup
-from cloud.aci_key_vault import KeyVaultStore
+from aci_tasks.cloud.aci_resource_group import AciResourceGroup
+from aci_tasks.cloud.aci_key_vault import (
+    AciKeyVaultManager,
+    AciKeyVaultSecretStore
+)
+
 
 if __name__ == "__main__":
     '''
@@ -39,15 +43,21 @@ if __name__ == "__main__":
     weak_container_group.start()
     weak_container_group.stop()
 
-    # Clean up
-    rg.delete()
+    # Create Key Vault
+    key_vault_manager = AciKeyVaultManager(strong_config)
+    key_vault_manager.create()
+
+    time.sleep(60)
 
     # Key Vault Store examples
     # TODO: Need to write code to create Key Vault
-    config_store = KeyVaultStore()
+    config_store = AciKeyVaultSecretStore()
 
     config_store["NAME"] = "Ian Philpot"
     config_store["JOB"] = "engineer"
 
     for k, v in config_store.items():
         print(f'Name: {k} \t\tValue: {v}')
+
+    # Clean up
+    rg.delete()

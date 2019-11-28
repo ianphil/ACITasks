@@ -3,14 +3,18 @@ import os
 from typing import Dict, Type
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+from azure.mgmt.keyvault import KeyVaultManagementClient
+from azure.mgmt.keyvault.models import (
+    Permissions,
+    Sku,
+    AccessPolicyEntry,
+    VaultProperties,
+    VaultCreateOrUpdateParameters
+)
+from aci_tasks.cloud.util import _get_credentials, _poll_for_complete
 
 
-class DictionaryStore(dict):
-    def __init__(self):
-        pass
-
-
-class KeyVaultStore(dict):
+class AciKeyVaultSecretStore(dict):
     def __setitem__(self, key, item):
         _add_item_to_key_vault(key, item)
 
@@ -35,6 +39,48 @@ class KeyVaultStore(dict):
     def items(self):
         result = _get_all_items_from_key_vault()
         return result.items()
+
+
+class AciKeyVaultManager():
+    def __init__(self, config):
+        self.config = config
+
+    def create(self):
+        secret_permissions = ['all']
+
+        permissions = Permissions(secrets=secret_permissions)
+
+        access_policy = AccessPolicyEntry(
+            tenant_id=self.config.tenant_id,
+            object_id=self.config.client_object_id,
+            permissions=permissions
+        )
+
+        sku = Sku(name="standard")
+
+        properties = VaultProperties(
+            tenant_id=self.config.tenant_id,
+            sku=sku,
+            access_policies=[access_policy]
+        )
+
+        vault_paramerters = VaultCreateOrUpdateParameters(
+            location="eastus",
+            properties=properties
+        )
+
+        client = self._get_kv_client()
+        result = client.vaults.create_or_update(
+            resource_group_name=self.config.resource_group_name,
+            vault_name=self.config.key_vault_name,
+            parameters=vault_paramerters
+        )
+        _poll_for_complete(result)
+
+    def _get_kv_client(self):
+        return KeyVaultManagementClient(
+            _get_credentials(self.config), self.config.subscription_id
+        )
 
 
 def _get_client() -> Type[SecretClient]:
