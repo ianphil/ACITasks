@@ -17,6 +17,8 @@ class AciContainerGroup():
         self.config = config
 
     def create(self):
+        self.logger.container_group_creating(self.config.container_group_name)
+
         if self._exists():
             return
 
@@ -44,9 +46,11 @@ class AciContainerGroup():
             if ce.inner_exception.error == "InaccessibleImage":
                 self.logger.logger.warning("Did you forget to push the image?")
 
-        self.logger.container_group_created()
+        self.logger.container_group_created(self.config.container_group_name)
 
     def delete(self):
+        self.logger.container_group_deleting(self.config.container_group_name)
+
         if not self._exists():
             return
 
@@ -60,7 +64,7 @@ class AciContainerGroup():
             self.logger.logger.warning(
                 f'Delete Container Group Error: {ce.message}')
 
-        self.logger.container_group_deleted()
+        self.logger.container_group_deleted(self.config.container_group_name)
 
     def start(self):
         if not self._exists():
@@ -104,12 +108,13 @@ class AciContainerGroup():
             if c.containers[0].image != self.config.container_image:
                 return False
 
-            self.logger.container_group_exist()
+            self.logger.container_group_exist(self.config.container_group_name)
             return True
         except CloudError as ce:
             if ce.inner_exception.error == "ResourceGroupNotFound":
                 self.logger.logger.warning(
                     "You need to create a resource group")
             if ce.inner_exception.error == "ResourceNotFound":
-                self.logger.container_group_not_exist()
+                self.logger.container_group_not_exist(
+                    self.logger.container_group_name)
                 return False
