@@ -5,17 +5,14 @@ from aci_tasks.logger import Logger
 from aci_tasks.cloud.aci_container import AciContainer
 from aci_tasks.cloud.aci_container_group import AciContainerGroup
 from aci_tasks.cloud.aci_resource_group import AciResourceGroup
-from aci_tasks.cloud.aci_key_vault import (
-    AciKeyVaultManager,
-    AciKeyVaultSecretStore
-)
+from aci_tasks.cloud.aci_key_vault import AciKeyVaultManager, AciKeyVaultSecretStore
 
 
 if __name__ == "__main__":
-    '''
+    """
     Note: The tests do these things also. From root of project
     just run "pytest"
-    '''
+    """
 
     # Create Strong task container and exec command
     strong_config = Config(TaskType.STRONG)

@@ -5,7 +5,7 @@ import requests
 
 ENDPOINT = os.getenv("ENDPOINTURL")
 name = "Strong"
-data = {'NAME': name}
+data = {"NAME": name}
 r = requests.post(url=ENDPOINT, json=data)
 
-print(f'Status code:\t{r.status_code}\nText:\t\t{r.text}')
+print(f"Status code:\t{r.status_code}\nText:\t\t{r.text}")

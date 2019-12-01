@@ -7,11 +7,11 @@ from azure.mgmt.containerinstance.models import (
     OperatingSystemTypes,
     ContainerGroupRestartPolicy,
     ContainerGroupIdentity,
-    ResourceIdentityType
+    ResourceIdentityType,
 )
 
 
-class AciContainerGroup():
+class AciContainerGroup:
     def __init__(self, logger, config):
         self.logger = logger
         self.config = config
@@ -31,15 +31,13 @@ class AciContainerGroup():
             containers=[container],
             os_type=OperatingSystemTypes.linux,
             restart_policy=ContainerGroupRestartPolicy.never,
-            identity=ContainerGroupIdentity(
-                type=ResourceIdentityType.system_assigned
-            ))
+            identity=ContainerGroupIdentity(type=ResourceIdentityType.system_assigned),
+        )
 
         try:
             result = ci_client.container_groups.create_or_update(
-                self.config.resource_group_name,
-                self.config.container_group_name,
-                group)
+                self.config.resource_group_name, self.config.container_group_name, group
+            )
 
             _poll_for_complete(result)
         except CloudError as ce:
@@ -58,11 +56,10 @@ class AciContainerGroup():
 
         try:
             ci_client.container_groups.delete(
-                self.config.resource_group_name,
-                self.config.container_group_name)
+                self.config.resource_group_name, self.config.container_group_name
+            )
         except CloudError as ce:
-            self.logger.logger.warning(
-                f'Delete Container Group Error: {ce.message}')
+            self.logger.logger.warning(f"Delete Container Group Error: {ce.message}")
 
         self.logger.container_group_deleted(self.config.container_group_name)
 
@@ -74,8 +71,7 @@ class AciContainerGroup():
 
         try:
             result = ci_client.container_groups.start(
-                self.config.resource_group_name,
-                self.config.container_group_name
+                self.config.resource_group_name, self.config.container_group_name
             )
 
             _poll_for_complete(result)
@@ -90,8 +86,7 @@ class AciContainerGroup():
 
         try:
             ci_client.container_groups.stop(
-                self.config.resource_group_name,
-                self.config.container_group_name
+                self.config.resource_group_name, self.config.container_group_name
             )
         except CloudError:
             pass
@@ -101,8 +96,7 @@ class AciContainerGroup():
 
         try:
             c = ci_client.container_groups.get(
-                self.config.resource_group_name,
-                self.config.container_group_name
+                self.config.resource_group_name, self.config.container_group_name
             )
 
             if c.containers[0].image != self.config.container_image:
@@ -112,9 +106,7 @@ class AciContainerGroup():
             return True
         except CloudError as ce:
             if ce.inner_exception.error == "ResourceGroupNotFound":
-                self.logger.logger.warning(
-                    "You need to create a resource group")
+                self.logger.logger.warning("You need to create a resource group")
             if ce.inner_exception.error == "ResourceNotFound":
-                self.logger.container_group_not_exist(
-                    self.logger.container_group_name)
+                self.logger.container_group_not_exist(self.logger.container_group_name)
                 return False

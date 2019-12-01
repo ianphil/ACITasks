@@ -3,7 +3,7 @@ from aci_tasks.cloud.util import _poll_for_complete, _get_credentials
 from azure.mgmt.resource import ResourceManagementClient
 
 
-class AciResourceGroup():
+class AciResourceGroup:
     def __init__(self, logger, config):
         self.logger = logger
         self.config = config
@@ -18,7 +18,8 @@ class AciResourceGroup():
 
         rg_client.resource_groups.create_or_update(
             self.config.resource_group_name,
-            {"location": self.config.resource_group_loation})
+            {"location": self.config.resource_group_loation},
+        )
 
         self.logger.resource_group_created(self.config.resource_group_name)
 
@@ -30,8 +31,7 @@ class AciResourceGroup():
 
         rg_client = self._get_rg_client()
 
-        result = rg_client.resource_groups.delete(
-            self.config.resource_group_name)
+        result = rg_client.resource_groups.delete(self.config.resource_group_name)
 
         _poll_for_complete(result)
 
@@ -40,16 +40,17 @@ class AciResourceGroup():
     def _exists(self) -> bool:
         rg_client = self._get_rg_client()
         exists = rg_client.resource_groups.check_existence(
-            self.config.resource_group_name)
+            self.config.resource_group_name
+        )
 
         if exists:
             self.logger.resource_group_exist(self.config.resource_group_name)
         else:
-            self.logger.resource_group_not_exist(
-                self.config.resource_group_name)
+            self.logger.resource_group_not_exist(self.config.resource_group_name)
 
         return exists
 
     def _get_rg_client(self) -> ResourceManagementClient:
         return ResourceManagementClient(
-            _get_credentials(self.config), self.config.subscription_id)
+            _get_credentials(self.config), self.config.subscription_id
+        )

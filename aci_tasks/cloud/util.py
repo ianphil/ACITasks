@@ -18,9 +18,7 @@ def _get_ci_client(config):
 
 def _get_credentials(config) -> ServicePrincipalCredentials:
     return ServicePrincipalCredentials(
-        client_id=config.client_id,
-        secret=config.client_secret,
-        tenant=config.tenant_id
+        client_id=config.client_id, secret=config.client_secret, tenant=config.tenant_id
     )
 
 

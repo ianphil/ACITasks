@@ -37,8 +37,8 @@ def test_strong_create(strong_container_group):
 
 
 def test_strong_execute(strong_container_instance):
-    '''This will post body=dog to https://hookbin.com/mZz671L0bXCBVLpJXLkx'''
-    strong_container_instance.execute_command('/strong_task/dog.py')
+    """This will post body=dog to https://hookbin.com/mZz671L0bXCBVLpJXLkx"""
+    strong_container_instance.execute_command("/strong_task/dog.py")
     assert 1 == 1  # TODO: need to figureout how to assert this
 
 
@@ -48,7 +48,7 @@ def test_strong_delete(strong_container_group):
 
 
 def test_weak_create(weak_container_group):
-    '''This will post body=cat to https://hookbin.com/mZz671L0bXCBVLpJXLkx'''
+    """This will post body=cat to https://hookbin.com/mZz671L0bXCBVLpJXLkx"""
     weak_container_group.create()
     assert weak_container_group._exists() is True
 
@@ -60,7 +60,7 @@ def test_weak_stop(weak_container_group):
 
 
 def test_weak_start(weak_container_group):
-    '''This will post body=cat to https://hookbin.com/mZz671L0bXCBVLpJXLkx'''
+    """This will post body=cat to https://hookbin.com/mZz671L0bXCBVLpJXLkx"""
     weak_container_group.start()
     assert 1 == 1  # TODO: need to figureout how to assert this
 
